@@ -1,0 +1,370 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Las Vegas Menu</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+  <style>
+  body {
+    background: #fff;
+  }
+  .menu-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+  }
+  .menu-title {
+    font-weight: bold;
+    color: #ffb400;
+  }
+  .card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    overflow: hidden;
+  }
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 6px 15px rgba(0,0,0,0.1);
+  }
+  .card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    background: #f8f8f8;
+  }
+  .price {
+    font-weight: bold;
+    color: #ffb400;
+    font-size: 18px;
+  }
+  .btn-add {
+    background: #ffeb99;
+    border: none;
+    color: #222;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 6px 12px;
+  }
+  .btn-add:hover {
+    background: #ffb400;
+    color: #fff;
+  }
+  /* Cart panel styles */
+  #cart-panel {
+    position: fixed;
+    top: 80px;
+    right: -350px; /* Start off-screen */
+    width: 300px;
+    max-height: 80vh;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    padding: 15px;
+    z-index: 9999;
+    transition: right 0.3s ease; /* Smooth slide-in */
+  }
+  #cart-panel.show {
+    right: 20px; /* Slide in */
+  }
+  #cart-panel h6 {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  .cart-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    padding: 5px;
+    border-radius: 6px;
+  }
+  .cart-item.new-item {
+    animation: highlight 0.5s ease;
+  }
+  @keyframes highlight {
+    0% { background-color: #ffeb99; }
+    100% { background-color: transparent; }
+  }
+  .cart-item button {
+    margin: 0 3px;
+  }
+  .cart-total {
+    font-weight: bold;
+    margin-top: 10px;
+    text-align: right;
+  }
+  #cart-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #ffb400;
+    border: none;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 50px;
+    font-weight: bold;
+    z-index: 10000;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Cart toggle button -->
+  <button id="cart-toggle">Cart (<span id="cart-count">0</span>)</button>
+
+  <!-- Cart panel -->
+  <div id="cart-panel">
+    <h6>Shopping Cart</h6>
+    <div id="cart-items"></div>
+    <div class="cart-total" id="cart-total">Total: R0.00</div>
+  </div>
+
+  <!-- Header -->
+  <div class="menu-header d-flex align-items-center">
+    <a href="/" class="me-3 text-dark text-decoration-none">&larr; Back</a>
+    <div>
+      <h5 class="menu-title mb-0">Our Menu</h5>
+      <small class="text-muted">Authentic South African flavors</small>
+    </div>
+  </div>
+
+  <!-- Search + Filter -->
+  <div class="container my-4">
+    <div class="row g-2 align-items-center">
+      <div class="col-md-8">
+        <input type="text" class="form-control" placeholder="Search menu items...">
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-outline-secondary w-100"><i class="bi bi-funnel"></i> Filter</button>
+      </div>
+      <div class="col-md-2">
+        <select class="form-select">
+          <option>All</option>
+          <option>Burgers</option>
+          <option>Meals</option>
+          <option>Drinks</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menu Grid -->
+  <div class="container">
+    <div class="row g-4">
+
+      <!-- Menu Item 1 -->
+      <div class="col-md-4" data-name="CHICKEN BURGER" data-price="44.99">
+        <div class="card">
+          <img src="/static/images/chicken burger.jpg" alt="Chicken Burger" class="img-fluid">
+          <div class="card-body">
+            <h6 class="text-warning fw-bold">CHICKEN BURGER</h6>
+            <p class="small text-muted">Patty made from ground chicken, grilled or fried, served with fresh toppings.</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="price">R44.99</span>
+              <button class="btn btn-add">+ Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+
+       <!-- Menu Item 2 -->
+      <div class="col-md-4">
+        <div class="card">
+          <img src="/static/images/images.jpg" alt="Chicken Plate" class="img-fluid">
+          <div class="card-body">
+            <h6 class="text-warning fw-bold">CHICKEN PLATE</h6>
+            <p class="small text-muted">Grilled chicken with spices and a side of fresh salad.</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="price">R100.00</span>
+              <button class="btn btn-add">+ Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Menu Item 3 -->
+      <div class="col-md-4">
+        <div class="card">
+          <img src="/static/images/kota.jpg" alt="King Kota" class="img-fluid">
+          <div class="card-body">
+            <h6 class="text-warning fw-bold">SKHAMBANE</h6>
+            <p class="small text-muted">Burger, chips, Russian, cheese, cucumber, and sauces.</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="price">R45.00</span>
+              <button class="btn btn-add">+ Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card">
+          <img src="/static/images/mogodu.jpg" alt="MOGODU" class="img-fluid">
+          <div class="card-body">
+            <h6 class="text-warning fw-bold">MOGODU PLATE</h6>
+            <p class="small text-muted">Traditional mogodu meal.</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="price">R65.00</span>
+              <button class="btn btn-add">+ Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <img src="/static/images/stake and wors.jpeg" alt="stake" class="img-fluid">
+          <div class="card-body">
+            <h6 class="text-warning fw-bold">STAKE AND WORS PLATE</h6>
+            <p class="small text-muted">Stake and wors african meal.</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="price">R100.00</span>
+              <button class="btn btn-add">+ Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <img src="/static/images/skopo.jpeg" alt="stake" class="img-fluid">
+          <div class="card-body">
+            <h6 class="text-warning fw-bold">SKOPO PLATE</h6>
+            <p class="small text-muted">Skopo Traditional Dish</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="price">R80.00</span>
+              <button class="btn btn-add">+ Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card">
+          <img src="/static/images/pap.jpg" alt="stake"class="img-fluid">
+          <div class="card-body">
+            <h6 class="text-warning fw-bold">EXTRA PAP</h6>
+            <p class="small text-muted">TSONGA Delicious PAP.</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="price">R10.00</span>
+              <button class="btn btn-add">+ Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card">
+          <img src="/static/images/coke.jpeg" alt="Drink" class="img-fluid">
+          <div class="card-body">
+            <h6 class="text-warning fw-bold">COKE Drink</h6>
+            <p class="small text-muted">500ML COKE DRINK.</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="price">R15.00</span>
+              <button class="btn btn-add">+ Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Cart functionality -->
+  <script>
+    const cartToggle = document.getElementById('cart-toggle');
+    const cartPanel = document.getElementById('cart-panel');
+    const cartItemsContainer = document.getElementById('cart-items');
+    const cartTotal = document.getElementById('cart-total');
+    const cartCount = document.getElementById('cart-count');
+
+    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+
+    cartToggle.addEventListener('click', () => {
+      cartPanel.classList.toggle('show');
+    });
+
+    document.querySelectorAll('.btn-add').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const card = e.target.closest('.col-md-4');
+        const name = card.dataset.name;
+        const price = parseFloat(card.dataset.price);
+
+        const existing = cartItems.find(item => item.name === name);
+        if (existing) {
+          existing.quantity += 1;
+        } else {
+          cartItems.push({ name, price, quantity: 1 });
+        }
+        saveCart();
+        renderCart(name); // highlight newly added
+        if (!cartPanel.classList.contains('show')) cartPanel.classList.add('show');
+      });
+    });
+
+    function renderCart(newItemName = null) {
+      cartItemsContainer.innerHTML = '';
+      let total = 0;
+      cartItems.forEach((item, index) => {
+        total += item.price * item.quantity;
+        const div = document.createElement('div');
+        div.classList.add('cart-item');
+        if(item.name === newItemName) div.classList.add('new-item');
+        div.innerHTML = `
+          <span>${item.name}</span>
+          <span>
+            <button class="btn btn-sm btn-outline-secondary btn-qty" data-action="decrease" data-index="${index}">-</button>
+            ${item.quantity}
+            <button class="btn btn-sm btn-outline-secondary btn-qty" data-action="increase" data-index="${index}">+</button>
+            R${(item.price * item.quantity).toFixed(2)}
+            <span class="remove text-danger" data-index="${index}" style="cursor:pointer">&times;</span>
+          </span>
+        `;
+        cartItemsContainer.appendChild(div);
+      });
+      cartTotal.innerText = `Total: R${total.toFixed(2)}`;
+      cartCount.innerText = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+      // Quantity buttons
+      document.querySelectorAll('.btn-qty').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const index = e.target.dataset.index;
+          const action = e.target.dataset.action;
+          if (action === 'increase') cartItems[index].quantity += 1;
+          if (action === 'decrease') cartItems[index].quantity = Math.max(1, cartItems[index].quantity - 1);
+          saveCart();
+          renderCart();
+        });
+      });
+
+      // Remove buttons
+      document.querySelectorAll('.cart-item .remove').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const index = e.target.dataset.index;
+          cartItems.splice(index, 1);
+          saveCart();
+          renderCart();
+        });
+      });
+    }
+
+    function saveCart() {
+      localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    }
+
+    renderCart();
+  </script>
+
+</body>
+</html>
+
