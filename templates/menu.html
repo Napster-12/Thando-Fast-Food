@@ -71,7 +71,7 @@
 
     <!-- Cart: inline on large screens, slide-in panel on phones -->
     <div class="col-lg-4">
-      <div class="offcanvas-lg offcanvas-end cart-panel" tabindex="-1" id="cartPanel" aria-labelledby="cartTitle">
+      <div class="offcanvas-lg offcanvas-bottom cart-panel" tabindex="-1" id="cartPanel" aria-labelledby="cartTitle">
         <div class="offcanvas-header">
           <h2 class="offcanvas-title h5" id="cartTitle">Your order</h2>
           <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#cartPanel" aria-label="Close"></button>
@@ -283,17 +283,19 @@
       total += info.price * line.quantity;
       count += line.quantity;
       const row = document.createElement('div');
-      row.className = 'cart-line d-flex align-items-center gap-2 py-2';
+      row.className = 'cart-line py-2';
       row.innerHTML = `
-        <div class="flex-grow-1">
+        <div class="d-flex justify-content-between gap-3">
           <div class="fw-semibold line-name"></div>
-          <small class="text-tf-muted d-block line-extras"></small>
-          <small class="text-tf-muted">${money(info.price)} each</small>
+          <span class="fw-bold text-nowrap">${money(info.price * line.quantity)}</span>
         </div>
-        <button class="btn qty-btn" data-delta="-1" aria-label="Remove one"><i class="bi bi-dash"></i></button>
-        <span class="fw-bold" style="min-width:1.5rem;text-align:center">${line.quantity}</span>
-        <button class="btn qty-btn" data-delta="1" aria-label="Add one"><i class="bi bi-plus"></i></button>
-        <span class="fw-bold text-end" style="min-width:4.5rem">${money(info.price * line.quantity)}</span>`;
+        <small class="text-tf-muted d-block line-extras"></small>
+        <div class="d-flex align-items-center gap-2 mt-1">
+          <small class="text-tf-muted flex-grow-1">${money(info.price)} each</small>
+          <button class="btn qty-btn" data-delta="-1" aria-label="Remove one"><i class="bi bi-dash"></i></button>
+          <span class="fw-bold" style="min-width:1.5rem;text-align:center">${line.quantity}</span>
+          <button class="btn qty-btn" data-delta="1" aria-label="Add one"><i class="bi bi-plus"></i></button>
+        </div>`;
       row.querySelector('.line-name').textContent = info.name;
       row.querySelector('.line-extras').textContent = info.extras ? '+ ' + info.extras : '';
       row.querySelectorAll('.qty-btn').forEach(b =>
