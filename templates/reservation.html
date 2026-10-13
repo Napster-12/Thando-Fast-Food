@@ -75,7 +75,7 @@
       <div class="tf-card p-4">
         <h2 class="h6 tf-eyebrow">Good to know</h2>
         <ul class="list-unstyled text-tf-muted mb-0">
-          <li class="d-flex gap-2 mb-3"><i class="bi bi-clock text-danger"></i>Open daily 11:00 – 23:00. Last booking at 22:00.</li>
+          <li class="d-flex gap-2 mb-3"><i class="bi bi-clock text-danger"></i>{{ store.hours }}. Last booking at {{ '%02d:00'|format(store.close_hour - 1) }}.</li>
           <li class="d-flex gap-2 mb-3"><i class="bi bi-hourglass-split text-danger"></i>Tables are held for 15 minutes past your booking time.</li>
           <li class="d-flex gap-2 mb-3"><i class="bi bi-people text-danger"></i><span>Online bookings are for up to 8 people. Bigger groups, please call <a href="tel:{{ store.phone_link }}" class="text-nowrap">{{ store.phone }}</a>.</span></li>
           <li class="d-flex gap-2"><i class="bi bi-envelope-check text-danger"></i>We'll contact you within 24 hours to confirm.</li>
@@ -102,13 +102,13 @@
   const localToday = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
   dateInput.min = localToday;
 
-  // Slots every 30 minutes from 11:00 to 22:00; past slots are hidden for today.
+  // Slots every 30 minutes from opening until an hour before closing; past slots are hidden for today.
   function fillTimes() {
     const current = timeSelect.value;
     timeSelect.length = 1;
     const isToday = dateInput.value === localToday;
     const nowMinutes = now.getHours() * 60 + now.getMinutes();
-    for (let m = 11 * 60; m <= 22 * 60; m += 30) {
+    for (let m = {{ store.open_hour }} * 60; m <= {{ store.close_hour - 1 }} * 60; m += 30) {
       if (isToday && m <= nowMinutes) continue;
       const t = `${pad(Math.floor(m / 60))}:${pad(m % 60)}`;
       timeSelect.add(new Option(t, t));

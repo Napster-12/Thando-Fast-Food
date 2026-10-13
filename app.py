@@ -21,9 +21,9 @@ STORE = {
     "phone": "076 868 2209",
     "phone_link": "+27768682209",
     "address": "10 Intaka Place, Ntuzuma",
-    "hours": "Open daily, 11:00 – 23:00",
-    "open_hour": 11,
-    "close_hour": 23,
+    "hours": "Open daily, 08:00 – 20:00",
+    "open_hour": 8,
+    "close_hour": 20,
 }
 
 # Menu sections, in the order they appear on the menu board.
@@ -386,7 +386,8 @@ def create_booking():
     # Last seating is one hour before closing.
     minutes = hour * 60 + minute
     if not STORE["open_hour"] * 60 <= minutes <= (STORE["close_hour"] - 1) * 60:
-        return jsonify(error="Please choose a time between 11:00 and 22:00."), 400
+        return jsonify(error=f"Please choose a time between {STORE['open_hour']:02d}:00 "
+                             f"and {STORE['close_hour'] - 1:02d}:00."), 400
 
     db = get_db()
     cur = db.execute(
