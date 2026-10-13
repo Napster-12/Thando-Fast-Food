@@ -1,146 +1,158 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Book a Table - LAS VEGAS</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-  <style>
-    body { background: #f9fafb; }
-    .bg-gradient-warm { background: linear-gradient(135deg,#ffb400,#ff8a00); color: #fff; }
-    .shadow-card { box-shadow: 0 16px 50px rgba(0,0,0,.15); border-radius: 12px; }
-    .min-h-screen { min-height: 100vh; }
-    .container { max-width: 720px; }
-  </style>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Book a Table — {{ store.name }}{% endblock %}
 
-  <!-- Header -->
-  <header class="py-3 bg-white border-bottom mb-4">
-    <div class="container d-flex align-items-center">
-      <a href="/" class="text-decoration-none me-3"><i class="bi bi-arrow-left"></i> Back</a>
-      <h1 class="h4 mb-0">Book a Table</h1>
+{% block content %}
+<header class="page-head">
+  <div class="container">
+    <p class="tf-eyebrow mb-1">Eat in with us</p>
+    <h1 class="mb-1">Book a Table</h1>
+    <p>We'll confirm your booking within 24 hours.</p>
+  </div>
+</header>
+
+<div class="container py-5">
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="tf-card p-4 p-lg-5">
+        <div id="bookingDone" class="text-center py-4 d-none">
+          <div class="feature-icon feature-icon-ok mx-auto mb-3"><i class="bi bi-check-lg"></i></div>
+          <h2 class="h4">Request received!</h2>
+          <p class="text-tf-muted" id="bookingDoneText"></p>
+          <button class="btn btn-tf-outline px-4" id="bookAnother">Make another booking</button>
+        </div>
+
+        <form id="bookingForm" novalidate>
+          <h2 class="h5 mb-3">Your details</h2>
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <label for="customer_name" class="form-label fw-semibold">Full name *</label>
+              <input type="text" class="form-control" id="customer_name" name="customer_name" required autocomplete="name">
+              <div class="invalid-feedback">Please enter your name.</div>
+            </div>
+            <div class="col-md-6">
+              <label for="customer_email" class="form-label fw-semibold">Email *</label>
+              <input type="email" class="form-control" id="customer_email" name="customer_email" required autocomplete="email">
+              <div class="invalid-feedback">Please enter a valid email address.</div>
+            </div>
+            <div class="col-md-6">
+              <label for="customer_phone" class="form-label fw-semibold">Phone number</label>
+              <input type="tel" class="form-control" id="customer_phone" name="customer_phone" autocomplete="tel">
+            </div>
+          </div>
+
+          <h2 class="h5 mb-3">Booking details</h2>
+          <div class="row g-3 mb-3">
+            <div class="col-md-4">
+              <label for="booking_date" class="form-label fw-semibold">Date *</label>
+              <input type="date" class="form-control" id="booking_date" name="booking_date" required min="{{ today }}">
+              <div class="invalid-feedback">Pick a date from today onwards.</div>
+            </div>
+            <div class="col-md-4">
+              <label for="booking_time" class="form-label fw-semibold">Time *</label>
+              <select id="booking_time" name="booking_time" class="form-select" required>
+                <option value="">Select time</option>
+              </select>
+              <div class="invalid-feedback">Pick a time.</div>
+            </div>
+            <div class="col-md-4">
+              <label for="party_size" class="form-label fw-semibold">Party size *</label>
+              <select id="party_size" name="party_size" class="form-select" required></select>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label for="special_requests" class="form-label fw-semibold">Special requests</label>
+            <textarea id="special_requests" name="special_requests" class="form-control" rows="3" placeholder="Birthday, high chair, dietary needs…"></textarea>
+          </div>
+
+          <div id="bookingError" class="alert alert-danger d-none"></div>
+          <button type="submit" class="btn btn-tf btn-lg w-100" id="bookingBtn">Send booking request</button>
+        </form>
+      </div>
     </div>
-  </header>
 
-  <!-- Booking Form -->
-  <main class="container mb-5">
-    <div class="shadow-card p-4 bg-white">
-      <h2 class="h5 mb-3"><i class="bi bi-calendar"></i> Make a Reservation</h2>
-      <p class="text-muted">Reserve your table at LAS VEGAS We'll confirm your booking within 24 hours.</p>
-
-      <form id="bookingForm" class="mt-3">
-        <!-- Personal Info -->
-        <div class="row mb-3">
-          <div class="col-md-6">
-            <label for="customer_name" class="form-label">Full Name *</label>
-            <input type="text" class="form-control" id="customer_name" name="customer_name" required>
-          </div>
-          <div class="col-md-6">
-            <label for="customer_email" class="form-label">Email *</label>
-            <input type="email" class="form-control" id="customer_email" name="customer_email" required>
-          </div>
-        </div>
-        <div class="mb-3">
-          <label for="customer_phone" class="form-label">Phone Number</label>
-          <input type="tel" class="form-control" id="customer_phone" name="customer_phone">
-        </div>
-
-        <!-- Booking Details -->
-        <div class="row mb-3">
-          <div class="col-md-4">
-            <label for="appointment_date" class="form-label">Date *</label>
-            <input type="date" class="form-control" id="appointment_date" name="appointment_date" required min="">
-          </div>
-          <div class="col-md-4">
-            <label for="appointment_time" class="form-label">Time *</label>
-            <select id="appointment_time" name="appointment_time" class="form-select" required>
-              <option value="">Select time</option>
-            </select>
-          </div>
-          <div class="col-md-4">
-            <label for="party_size" class="form-label">Party Size *</label>
-            <select id="party_size" name="party_size" class="form-select" required>
-              <!-- Options generated by JS -->
-            </select>
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label for="special_requests" class="form-label">Special Requests</label>
-          <textarea id="special_requests" name="special_requests" class="form-control" rows="3" placeholder="Any special requests..."></textarea>
-        </div>
-
-        <button type="submit" class="btn bg-gradient-warm w-100">Submit Reservation Request</button>
-      </form>
-
-      <!-- Booking Info -->
-      <div class="mt-4 p-3 bg-light rounded">
-        <ul class="mb-0 text-muted">
-          <li>• We're open daily from 11:00 AM to 11:00 PM</li>
-          <li>• Reservations are held for 15 minutes past the scheduled time</li>
-          <li>• For parties of 8 or more, please call us directly</li>
-          <li>• We'll contact you within 24 hours to confirm your booking</li>
+    <div class="col-lg-4">
+      <div class="tf-card p-4">
+        <h2 class="h6 tf-eyebrow">Good to know</h2>
+        <ul class="list-unstyled text-tf-muted mb-0">
+          <li class="d-flex gap-2 mb-3"><i class="bi bi-clock text-danger"></i>Open daily 11:00 – 23:00. Last booking at 22:00.</li>
+          <li class="d-flex gap-2 mb-3"><i class="bi bi-hourglass-split text-danger"></i>Tables are held for 15 minutes past your booking time.</li>
+          <li class="d-flex gap-2 mb-3"><i class="bi bi-people text-danger"></i><span>Online bookings are for up to 8 people. Bigger groups, please call <a href="tel:{{ store.phone_link }}" class="text-nowrap">{{ store.phone }}</a>.</span></li>
+          <li class="d-flex gap-2"><i class="bi bi-envelope-check text-danger"></i>We'll contact you within 24 hours to confirm.</li>
         </ul>
       </div>
     </div>
-  </main>
+  </div>
+</div>
+{% endblock %}
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+{% block scripts %}
+<script>
+  const form = document.getElementById('bookingForm');
+  const partySelect = document.getElementById('party_size');
+  const timeSelect = document.getElementById('booking_time');
+  const dateInput = document.getElementById('booking_date');
 
-  <!-- Form Logic -->
-  <script>
-    // Populate party size
-    const partySelect = document.getElementById('party_size');
-    for(let i=1;i<=10;i++){
-      const opt = document.createElement('option');
-      opt.value = i;
-      opt.text = i + (i===1 ? ' person' : ' people');
-      partySelect.appendChild(opt);
+  for (let i = 1; i <= 8; i++) partySelect.add(new Option(i + (i === 1 ? ' person' : ' people'), i));
+  partySelect.value = 2;
+
+  // Use the visitor's local date so "today" is right even across time zones.
+  const now = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  const localToday = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+  dateInput.min = localToday;
+
+  // Slots every 30 minutes from 11:00 to 22:00; past slots are hidden for today.
+  function fillTimes() {
+    const current = timeSelect.value;
+    timeSelect.length = 1;
+    const isToday = dateInput.value === localToday;
+    const nowMinutes = now.getHours() * 60 + now.getMinutes();
+    for (let m = 11 * 60; m <= 22 * 60; m += 30) {
+      if (isToday && m <= nowMinutes) continue;
+      const t = `${pad(Math.floor(m / 60))}:${pad(m % 60)}`;
+      timeSelect.add(new Option(t, t));
     }
+    if ([...timeSelect.options].some(o => o.value === current)) timeSelect.value = current;
+  }
+  dateInput.addEventListener('change', fillTimes);
+  fillTimes();
 
-    // Populate time slots
-    const timeSelect = document.getElementById('appointment_time');
-    for(let hour=11; hour<=22; hour++){
-      ['00','30'].forEach(min=>{
-        const time = hour.toString().padStart(2,'0') + ':' + min;
-        const opt = document.createElement('option');
-        opt.value = time;
-        opt.text = time;
-        timeSelect.appendChild(opt);
-      });
+  const errorEl = document.getElementById('bookingError');
+  const btn = document.getElementById('bookingBtn');
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    errorEl.classList.add('d-none');
+    if (!form.checkValidity()) {
+      form.classList.add('was-validated');
+      return;
     }
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    const data = Object.fromEntries(new FormData(form));
+    try {
+      await sendJSON('/api/bookings', 'POST', data);
+      document.getElementById('bookingDoneText').textContent =
+        `Thank you, ${data.customer_name}. We've got your request for ${data.party_size} on ${data.booking_date} at ${data.booking_time} and will confirm by email.`;
+      form.classList.add('d-none');
+      document.getElementById('bookingDone').classList.remove('d-none');
+      form.reset();
+      form.classList.remove('was-validated');
+      partySelect.value = 2;
+      fillTimes();
+    } catch (err) {
+      errorEl.textContent = err.message;
+      errorEl.classList.remove('d-none');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Send booking request';
+    }
+  });
 
-    // Set min date to today
-    const dateInput = document.getElementById('appointment_date');
-    const today = new Date().toISOString().split('T')[0];
-    dateInput.min = today;
-
-    // Form submission
-    document.getElementById('bookingForm').addEventListener('submit', function(e){
-      e.preventDefault();
-      const name = this.customer_name.value.trim();
-      const email = this.customer_email.value.trim();
-      const date = this.appointment_date.value;
-      const time = this.appointment_time.value;
-
-      if(!name || !email || !date || !time){
-        alert('Please fill in all required fields.');
-        return;
-      }
-
-      // Basic email validation
-      const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
-      if(!emailRegex.test(email)){
-        alert('Please enter a valid email address.');
-        return;
-      }
-
-      alert('Booking request submitted successfully!\nThank you, ' + name);
-      this.reset();
-    });
-  </script>
-</body>
-</html>
+  document.getElementById('bookAnother').addEventListener('click', () => {
+    document.getElementById('bookingDone').classList.add('d-none');
+    form.classList.remove('d-none');
+  });
+</script>
+{% endblock %}

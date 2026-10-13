@@ -1,370 +1,399 @@
+{% extends "base.html" %}
+{% block title %}Menu — {{ store.name }}{% endblock %}
 
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Las Vegas Menu</title>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-  <style>
-  body {
-    background: #fff;
-  }
-  .menu-header {
-    padding: 15px 20px;
-    border-bottom: 1px solid #eee;
-  }
-  .menu-title {
-    font-weight: bold;
-    color: #ffb400;
-  }
-  .card {
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0px 4px 10px rgba(0,0,0,0.05);
-    transition: all 0.3s ease;
-    overflow: hidden;
-  }
-  .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0px 6px 15px rgba(0,0,0,0.1);
-  }
-  .card img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-    background: #f8f8f8;
-  }
-  .price {
-    font-weight: bold;
-    color: #ffb400;
-    font-size: 18px;
-  }
-  .btn-add {
-    background: #ffeb99;
-    border: none;
-    color: #222;
-    font-weight: 600;
-    border-radius: 8px;
-    padding: 6px 12px;
-  }
-  .btn-add:hover {
-    background: #ffb400;
-    color: #fff;
-  }
-  /* Cart panel styles */
-  #cart-panel {
-    position: fixed;
-    top: 80px;
-    right: -350px; /* Start off-screen */
-    width: 300px;
-    max-height: 80vh;
-    overflow-y: auto;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-    padding: 15px;
-    z-index: 9999;
-    transition: right 0.3s ease; /* Smooth slide-in */
-  }
-  #cart-panel.show {
-    right: 20px; /* Slide in */
-  }
-  #cart-panel h6 {
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  .cart-item {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
-    padding: 5px;
-    border-radius: 6px;
-  }
-  .cart-item.new-item {
-    animation: highlight 0.5s ease;
-  }
-  @keyframes highlight {
-    0% { background-color: #ffeb99; }
-    100% { background-color: transparent; }
-  }
-  .cart-item button {
-    margin: 0 3px;
-  }
-  .cart-total {
-    font-weight: bold;
-    margin-top: 10px;
-    text-align: right;
-  }
-  #cart-toggle {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: #ffb400;
-    border: none;
-    color: #fff;
-    padding: 10px 15px;
-    border-radius: 50px;
-    font-weight: bold;
-    z-index: 10000;
-  }
-</style>
-</head>
-<body>
-
-  <!-- Cart toggle button -->
-  <button id="cart-toggle">Cart (<span id="cart-count">0</span>)</button>
-
-  <!-- Cart panel -->
-  <div id="cart-panel">
-    <h6>Shopping Cart</h6>
-    <div id="cart-items"></div>
-    <div class="cart-total" id="cart-total">Total: R0.00</div>
-  </div>
-
-  <!-- Header -->
-  <div class="menu-header d-flex align-items-center">
-    <a href="/" class="me-3 text-dark text-decoration-none">&larr; Back</a>
-    <div>
-      <h5 class="menu-title mb-0">Our Menu</h5>
-      <small class="text-muted">Authentic South African flavors</small>
-    </div>
-  </div>
-
-  <!-- Search + Filter -->
-  <div class="container my-4">
-    <div class="row g-2 align-items-center">
-      <div class="col-md-8">
-        <input type="text" class="form-control" placeholder="Search menu items...">
-      </div>
-      <div class="col-md-2">
-        <button class="btn btn-outline-secondary w-100"><i class="bi bi-funnel"></i> Filter</button>
-      </div>
-      <div class="col-md-2">
-        <select class="form-select">
-          <option>All</option>
-          <option>Burgers</option>
-          <option>Meals</option>
-          <option>Drinks</option>
-        </select>
-      </div>
-    </div>
-  </div>
-
-  <!-- Menu Grid -->
+{% block content %}
+<header class="page-head">
   <div class="container">
-    <div class="row g-4">
+    <p class="tf-eyebrow">Order for collection</p>
+    <h1 class="mb-1">Our Menu</h1>
+    <p>Kotas, amagwinya, hotdogs &amp; chips. {{ store.tagline }}</p>
+  </div>
+</header>
 
-      <!-- Menu Item 1 -->
-      <div class="col-md-4" data-name="CHICKEN BURGER" data-price="44.99">
-        <div class="card">
-          <img src="/static/images/chicken burger.jpg" alt="Chicken Burger" class="img-fluid">
-          <div class="card-body">
-            <h6 class="text-warning fw-bold">CHICKEN BURGER</h6>
-            <p class="small text-muted">Patty made from ground chicken, grilled or fried, served with fresh toppings.</p>
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="price">R44.99</span>
-              <button class="btn btn-add">+ Add to Cart</button>
+<div class="container py-4">
+  <div class="row g-4">
+    <!-- Menu board -->
+    <div class="col-lg-8">
+      <div class="menu-filters py-2 mb-3">
+        <div class="position-relative mb-3">
+          <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-tf-muted"></i>
+          <input id="search" type="search" class="form-control form-control-lg ps-5" placeholder="Search the menu…" aria-label="Search the menu">
+        </div>
+        <div class="cat-scroll" aria-label="Categories">
+          <button class="cat-pill active" data-cat="All">All</button>
+          {% for cat in categories %}
+          <button class="cat-pill" data-cat="{{ cat.name }}">{{ cat.name }}</button>
+          {% endfor %}
+        </div>
+      </div>
+
+      <section class="menu-section kota-promo tf-card p-4 mb-4" data-cat="Kota" data-search="kota create your own build bread fillings">
+        <div class="row align-items-center g-3">
+          <div class="col-sm">
+            <span class="dish-cat">Kota</span>
+            <h2 class="board-title mb-1">Create your own kota</h2>
+            <p class="mb-0">Pick your bread, then load it up with polony, cheese, russian, yababa and more. From R{{ '%.2f'|format(kota_bases|map(attribute='price')|min) }}.</p>
+          </div>
+          <div class="col-sm-auto">
+            <button class="btn btn-tf btn-lg px-4 w-100" data-bs-toggle="modal" data-bs-target="#kotaModal"><i class="bi bi-plus-lg me-1"></i>Build a kota</button>
+          </div>
+        </div>
+      </section>
+
+      {% for cat in categories if cat.name != 'Kota' %}
+      <section class="menu-section tf-card board mb-4" data-cat="{{ cat.name }}" id="{{ cat.name|lower|replace(' ', '-') }}">
+        <div class="board-head">
+          <h2 class="board-title mb-0"><i class="bi bi-{{ cat.icon }} me-2"></i>{{ cat.name }}</h2>
+          <p class="small mb-0">{{ cat.blurb }}</p>
+        </div>
+        <ul class="list-unstyled mb-0">
+          {% for item in menu if item.category == cat.name %}
+          <li class="menu-row" data-id="{{ item.id }}" data-search="{{ (item.name ~ ' ' ~ item.desc ~ ' ' ~ item.category)|lower }}">
+            <div class="menu-row-name">
+              <span class="fw-bold">{{ item.name }}</span>
+              {% if item.desc %}<span class="small text-tf-muted ms-1">({{ item.desc }})</span>{% endif %}
+            </div>
+            <span class="leader" aria-hidden="true"></span>
+            <span class="menu-row-price">R{{ '%.2f'|format(item.price) }}</span>
+            <button class="btn btn-tf-yellow btn-sm btn-add" data-id="{{ item.id }}" aria-label="Add {{ item.name }}"><i class="bi bi-plus-lg"></i></button>
+          </li>
+          {% endfor %}
+        </ul>
+      </section>
+      {% endfor %}
+
+      <p id="noResults" class="text-center text-tf-muted py-5 d-none">Nothing on the menu matches your search.</p>
+
+      <div class="tf-card drinks-banner p-3 text-center">
+        <i class="bi bi-cup-straw me-2"></i><strong>Drinks are available in store.</strong>
+      </div>
+    </div>
+
+    <!-- Cart: inline on large screens, slide-in panel on phones -->
+    <div class="col-lg-4">
+      <div class="offcanvas-lg offcanvas-end cart-panel" tabindex="-1" id="cartPanel" aria-labelledby="cartTitle">
+        <div class="offcanvas-header">
+          <h2 class="offcanvas-title h5" id="cartTitle">Your order</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#cartPanel" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body d-block p-0">
+          <div class="tf-card p-3 w-100">
+            <h2 class="h5 d-none d-lg-block mb-3"><i class="bi bi-bag me-2"></i>Your order</h2>
+            <div id="cartEmpty" class="text-center text-tf-muted py-4">
+              <i class="bi bi-basket fs-1 d-block mb-2"></i>Your cart is empty.<br>Add something tasty!
+            </div>
+            <div id="cartLines"></div>
+            <div id="cartSummary" class="d-none">
+              <div class="d-flex justify-content-between fw-bold fs-5 border-top border-2 border-dark pt-3 mt-2">
+                <span>Total</span><span id="cartTotal">R0.00</span>
+              </div>
+              <form id="checkoutForm" class="mt-3" novalidate>
+                <div class="mb-2">
+                  <label class="form-label small fw-semibold" for="co_name">Your name *</label>
+                  <input class="form-control" id="co_name" name="customer_name" required autocomplete="name">
+                </div>
+                <div class="mb-2">
+                  <label class="form-label small fw-semibold" for="co_phone">Phone number *</label>
+                  <input class="form-control" id="co_phone" name="customer_phone" type="tel" required autocomplete="tel">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label small fw-semibold" for="co_notes">Notes</label>
+                  <input class="form-control" id="co_notes" name="notes" placeholder="e.g. extra atchar, no onions">
+                </div>
+                <div id="checkoutError" class="alert alert-danger py-2 small d-none"></div>
+                <button class="btn btn-tf w-100 py-2" type="submit" id="checkoutBtn">Place order for collection</button>
+              </form>
             </div>
           </div>
         </div>
       </div>
-
-      
-
-       <!-- Menu Item 2 -->
-      <div class="col-md-4">
-        <div class="card">
-          <img src="/static/images/images.jpg" alt="Chicken Plate" class="img-fluid">
-          <div class="card-body">
-            <h6 class="text-warning fw-bold">CHICKEN PLATE</h6>
-            <p class="small text-muted">Grilled chicken with spices and a side of fresh salad.</p>
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="price">R100.00</span>
-              <button class="btn btn-add">+ Add to Cart</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Menu Item 3 -->
-      <div class="col-md-4">
-        <div class="card">
-          <img src="/static/images/kota.jpg" alt="King Kota" class="img-fluid">
-          <div class="card-body">
-            <h6 class="text-warning fw-bold">SKHAMBANE</h6>
-            <p class="small text-muted">Burger, chips, Russian, cheese, cucumber, and sauces.</p>
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="price">R45.00</span>
-              <button class="btn btn-add">+ Add to Cart</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="card">
-          <img src="/static/images/mogodu.jpg" alt="MOGODU" class="img-fluid">
-          <div class="card-body">
-            <h6 class="text-warning fw-bold">MOGODU PLATE</h6>
-            <p class="small text-muted">Traditional mogodu meal.</p>
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="price">R65.00</span>
-              <button class="btn btn-add">+ Add to Cart</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card">
-          <img src="/static/images/stake and wors.jpeg" alt="stake" class="img-fluid">
-          <div class="card-body">
-            <h6 class="text-warning fw-bold">STAKE AND WORS PLATE</h6>
-            <p class="small text-muted">Stake and wors african meal.</p>
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="price">R100.00</span>
-              <button class="btn btn-add">+ Add to Cart</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card">
-          <img src="/static/images/skopo.jpeg" alt="stake" class="img-fluid">
-          <div class="card-body">
-            <h6 class="text-warning fw-bold">SKOPO PLATE</h6>
-            <p class="small text-muted">Skopo Traditional Dish</p>
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="price">R80.00</span>
-              <button class="btn btn-add">+ Add to Cart</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="card">
-          <img src="/static/images/pap.jpg" alt="stake"class="img-fluid">
-          <div class="card-body">
-            <h6 class="text-warning fw-bold">EXTRA PAP</h6>
-            <p class="small text-muted">TSONGA Delicious PAP.</p>
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="price">R10.00</span>
-              <button class="btn btn-add">+ Add to Cart</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="card">
-          <img src="/static/images/coke.jpeg" alt="Drink" class="img-fluid">
-          <div class="card-body">
-            <h6 class="text-warning fw-bold">COKE Drink</h6>
-            <p class="small text-muted">500ML COKE DRINK.</p>
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="price">R15.00</span>
-              <button class="btn btn-add">+ Add to Cart</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
   </div>
+</div>
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<button class="btn btn-tf btn-lg cart-fab d-lg-none d-flex justify-content-between align-items-center" type="button"
+        data-bs-toggle="offcanvas" data-bs-target="#cartPanel" aria-controls="cartPanel">
+  <span><i class="bi bi-bag me-2"></i>View order (<span id="cartCount">0</span>)</span>
+  <span id="cartFabTotal">R0.00</span>
+</button>
 
-  <!-- Cart functionality -->
-  <script>
-    const cartToggle = document.getElementById('cart-toggle');
-    const cartPanel = document.getElementById('cart-panel');
-    const cartItemsContainer = document.getElementById('cart-items');
-    const cartTotal = document.getElementById('cart-total');
-    const cartCount = document.getElementById('cart-count');
+<!-- Kota builder -->
+<div class="modal fade" id="kotaModal" tabindex="-1" aria-labelledby="kotaTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title board-title" id="kotaTitle">Build your kota</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h3 class="h6 mb-2">1. Pick your bread</h3>
+        <div class="d-grid gap-2 mb-4" id="kotaBases">
+          {% for b in kota_bases %}
+          <label class="kota-option">
+            <input type="radio" name="kota_base" value="{{ b.id }}" {{ 'checked' if loop.first }}>
+            <span class="flex-grow-1">{{ b.name }}</span>
+            <strong>R{{ '%.2f'|format(b.price) }}</strong>
+          </label>
+          {% endfor %}
+        </div>
+        <h3 class="h6 mb-2">2. Add fillings <span class="text-tf-muted fw-normal">(up to {{ kota_max }} of each)</span></h3>
+        <div class="d-grid gap-2" id="kotaFillings">
+          {% for f in kota_fillings %}
+          <div class="kota-option" data-id="{{ f.id }}">
+            <span class="flex-grow-1">{{ f.name }} <span class="text-tf-muted small">+R{{ '%.2f'|format(f.price) }}</span></span>
+            <button type="button" class="btn qty-btn" data-delta="-1" aria-label="Less {{ f.name }}"><i class="bi bi-dash"></i></button>
+            <span class="fw-bold kota-count" style="min-width:1.5rem;text-align:center">0</span>
+            <button type="button" class="btn qty-btn" data-delta="1" aria-label="More {{ f.name }}"><i class="bi bi-plus"></i></button>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <span class="fs-5 fw-bold">Total <span id="kotaTotal">R0.00</span></span>
+        <button type="button" class="btn btn-tf px-4" id="kotaAdd">Add to order</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+<!-- Order placed -->
+<div class="modal fade" id="orderModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center p-4">
+      <div class="feature-icon feature-icon-ok mx-auto mb-3"><i class="bi bi-check-lg"></i></div>
+      <h2 class="h4">Order placed!</h2>
+      <p class="text-tf-muted mb-1">Your order number is</p>
+      <p class="display-6 fw-bold mb-2" id="orderCode"></p>
+      <p class="text-tf-muted">Total <strong id="orderTotal"></strong>, pay when you collect. Track it any time in our chat.</p>
+      <div class="d-flex gap-2 justify-content-center">
+        <a href="{{ url_for('chat') }}" class="btn btn-tf px-4" id="trackLink">Track order</a>
+        <button class="btn btn-tf-outline px-4" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
 
-    cartToggle.addEventListener('click', () => {
-      cartPanel.classList.toggle('show');
+{% block scripts %}
+<script>
+  const MENU_BY_ID = Object.fromEntries({{ menu|tojson }}.map(m => [m.id, m]));
+  const KOTA_BASES = {{ kota_bases|map(attribute='id')|list|tojson }};
+  const KOTA_FILLINGS = {{ kota_fillings|map(attribute='id')|list|tojson }};
+  const KOTA_MAX = {{ kota_max }};
+  const CART_KEY = 'thando_cart_v2';
+
+  // ---------- Filtering ----------
+  const searchInput = document.getElementById('search');
+  const sections = [...document.querySelectorAll('.menu-section')];
+  let activeCat = 'All';
+
+  function applyFilters() {
+    const q = searchInput.value.trim().toLowerCase();
+    let shown = 0;
+    sections.forEach(sec => {
+      const inCat = activeCat === 'All' || sec.dataset.cat === activeCat;
+      const rows = [...sec.querySelectorAll('.menu-row')];
+      let visible;
+      if (rows.length) {
+        rows.forEach(r => r.classList.toggle('d-none', !r.dataset.search.includes(q)));
+        visible = rows.filter(r => !r.classList.contains('d-none')).length;
+      } else {
+        visible = sec.dataset.search.includes(q) ? 1 : 0;
+      }
+      const show = inCat && visible > 0;
+      sec.classList.toggle('d-none', !show);
+      if (show) shown++;
     });
+    document.getElementById('noResults').classList.toggle('d-none', shown > 0);
+  }
+  searchInput.addEventListener('input', applyFilters);
 
-    document.querySelectorAll('.btn-add').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const card = e.target.closest('.col-md-4');
-        const name = card.dataset.name;
-        const price = parseFloat(card.dataset.price);
+  const catButtons = [...document.querySelectorAll('.cat-pill')];
+  function selectCategory(btn) {
+    catButtons.forEach(b => b.classList.toggle('active', b === btn));
+    activeCat = btn.dataset.cat;
+    applyFilters();
+  }
+  catButtons.forEach(btn => btn.addEventListener('click', () => selectCategory(btn)));
 
-        const existing = cartItems.find(item => item.name === name);
-        if (existing) {
-          existing.quantity += 1;
-        } else {
-          cartItems.push({ name, price, quantity: 1 });
-        }
-        saveCart();
-        renderCart(name); // highlight newly added
-        if (!cartPanel.classList.contains('show')) cartPanel.classList.add('show');
-      });
+  // Links like /menu#hotdogs (from the home page) open on that category.
+  const hash = decodeURIComponent(location.hash.slice(1));
+  const fromHash = catButtons.find(b => b.dataset.cat.toLowerCase().replace(/ /g, '-') === hash);
+  if (fromHash && hash !== 'kota') selectCategory(fromHash);
+
+  // ---------- Kota helpers ----------
+  function kotaInfo(spec) {
+    const base = MENU_BY_ID[spec.base];
+    let price = base.price;
+    const parts = [];
+    KOTA_FILLINGS.forEach(id => {
+      const n = spec.fillings[id] || 0;
+      if (n) {
+        price += MENU_BY_ID[id].price * n;
+        parts.push(n > 1 ? `${n}× ${MENU_BY_ID[id].name}` : MENU_BY_ID[id].name);
+      }
     });
+    return { name: 'Kota: ' + base.name, extras: parts.join(', '), price };
+  }
+  function validKota(spec) {
+    return spec && KOTA_BASES.includes(spec.base) && spec.fillings &&
+      Object.entries(spec.fillings).every(([id, n]) => KOTA_FILLINGS.includes(id) && n >= 0 && n <= KOTA_MAX);
+  }
 
-    function renderCart(newItemName = null) {
-      cartItemsContainer.innerHTML = '';
-      let total = 0;
-      cartItems.forEach((item, index) => {
-        total += item.price * item.quantity;
-        const div = document.createElement('div');
-        div.classList.add('cart-item');
-        if(item.name === newItemName) div.classList.add('new-item');
-        div.innerHTML = `
-          <span>${item.name}</span>
-          <span>
-            <button class="btn btn-sm btn-outline-secondary btn-qty" data-action="decrease" data-index="${index}">-</button>
-            ${item.quantity}
-            <button class="btn btn-sm btn-outline-secondary btn-qty" data-action="increase" data-index="${index}">+</button>
-            R${(item.price * item.quantity).toFixed(2)}
-            <span class="remove text-danger" data-index="${index}" style="cursor:pointer">&times;</span>
-          </span>
-        `;
-        cartItemsContainer.appendChild(div);
-      });
-      cartTotal.innerText = `Total: R${total.toFixed(2)}`;
-      cartCount.innerText = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  // ---------- Cart ----------
+  // A line is {key, id, quantity} for menu items or {key, kota: {base, fillings}, quantity} for kotas.
+  function loadCart() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+      return saved.filter(l => l.quantity > 0 && (l.kota ? validKota(l.kota) : MENU_BY_ID[l.id]));
+    } catch { return []; }
+  }
+  function saveCart() {
+    try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch {}
+  }
+  let cart = loadCart();
 
-      // Quantity buttons
-      document.querySelectorAll('.btn-qty').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const index = e.target.dataset.index;
-          const action = e.target.dataset.action;
-          if (action === 'increase') cartItems[index].quantity += 1;
-          if (action === 'decrease') cartItems[index].quantity = Math.max(1, cartItems[index].quantity - 1);
-          saveCart();
-          renderCart();
-        });
-      });
+  function lineInfo(line) {
+    if (line.kota) return kotaInfo(line.kota);
+    const item = MENU_BY_ID[line.id];
+    return { name: item.name, extras: '', price: item.price };
+  }
 
-      // Remove buttons
-      document.querySelectorAll('.cart-item .remove').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const index = e.target.dataset.index;
-          cartItems.splice(index, 1);
-          saveCart();
-          renderCart();
-        });
-      });
-    }
-
-    function saveCart() {
-      localStorage.setItem('cartItems', JSON.stringify(cartItems));
-    }
-
+  function addLine(newLine) {
+    const existing = cart.find(l => l.key === newLine.key);
+    if (existing) existing.quantity += 1;
+    else cart.push({ ...newLine, quantity: 1 });
+    saveCart();
     renderCart();
-  </script>
+  }
+  function changeQty(key, delta) {
+    const line = cart.find(l => l.key === key);
+    if (line) line.quantity += delta;
+    cart = cart.filter(l => l.quantity > 0);
+    saveCart();
+    renderCart();
+  }
 
-</body>
-</html>
+  function renderCart() {
+    const linesEl = document.getElementById('cartLines');
+    linesEl.innerHTML = '';
+    let total = 0, count = 0;
+    cart.forEach(line => {
+      const info = lineInfo(line);
+      total += info.price * line.quantity;
+      count += line.quantity;
+      const row = document.createElement('div');
+      row.className = 'cart-line d-flex align-items-center gap-2 py-2';
+      row.innerHTML = `
+        <div class="flex-grow-1">
+          <div class="fw-semibold line-name"></div>
+          <small class="text-tf-muted d-block line-extras"></small>
+          <small class="text-tf-muted">${money(info.price)} each</small>
+        </div>
+        <button class="btn qty-btn" data-delta="-1" aria-label="Remove one"><i class="bi bi-dash"></i></button>
+        <span class="fw-bold" style="min-width:1.5rem;text-align:center">${line.quantity}</span>
+        <button class="btn qty-btn" data-delta="1" aria-label="Add one"><i class="bi bi-plus"></i></button>
+        <span class="fw-bold text-end" style="min-width:4.5rem">${money(info.price * line.quantity)}</span>`;
+      row.querySelector('.line-name').textContent = info.name;
+      row.querySelector('.line-extras').textContent = info.extras ? '+ ' + info.extras : '';
+      row.querySelectorAll('.qty-btn').forEach(b =>
+        b.addEventListener('click', () => changeQty(line.key, Number(b.dataset.delta))));
+      linesEl.appendChild(row);
+    });
+    document.getElementById('cartEmpty').classList.toggle('d-none', cart.length > 0);
+    document.getElementById('cartSummary').classList.toggle('d-none', cart.length === 0);
+    document.getElementById('cartTotal').textContent = money(total);
+    document.getElementById('cartFabTotal').textContent = money(total);
+    document.getElementById('cartCount').textContent = count;
+  }
 
+  function flashAdded(btn, html) {
+    btn.innerHTML = '<i class="bi bi-check-lg"></i>';
+    setTimeout(() => { btn.innerHTML = html; }, 800);
+  }
+
+  document.querySelectorAll('.btn-add').forEach(btn => btn.addEventListener('click', () => {
+    addLine({ key: btn.dataset.id, id: btn.dataset.id });
+    flashAdded(btn, '<i class="bi bi-plus-lg"></i>');
+  }));
+
+  // ---------- Kota builder ----------
+  const kotaModalEl = document.getElementById('kotaModal');
+  const kotaFillings = {};
+
+  function currentKota() {
+    const base = document.querySelector('input[name="kota_base"]:checked').value;
+    const fillings = Object.fromEntries(Object.entries(kotaFillings).filter(([, n]) => n > 0));
+    return { base, fillings };
+  }
+  function renderKota() {
+    document.querySelectorAll('#kotaFillings .kota-option').forEach(row => {
+      row.querySelector('.kota-count').textContent = kotaFillings[row.dataset.id] || 0;
+    });
+    document.getElementById('kotaTotal').textContent = money(kotaInfo(currentKota()).price);
+  }
+  document.querySelectorAll('#kotaFillings .kota-option').forEach(row => {
+    row.querySelectorAll('.qty-btn').forEach(b => b.addEventListener('click', () => {
+      const n = (kotaFillings[row.dataset.id] || 0) + Number(b.dataset.delta);
+      kotaFillings[row.dataset.id] = Math.max(0, Math.min(KOTA_MAX, n));
+      renderKota();
+    }));
+  });
+  document.querySelectorAll('input[name="kota_base"]').forEach(r => r.addEventListener('change', renderKota));
+  kotaModalEl.addEventListener('show.bs.modal', () => {
+    Object.keys(kotaFillings).forEach(k => delete kotaFillings[k]);
+    document.querySelector('input[name="kota_base"]').checked = true;
+    renderKota();
+  });
+  document.getElementById('kotaAdd').addEventListener('click', () => {
+    const kota = currentKota();
+    const key = 'kota|' + kota.base + '|' + Object.keys(kota.fillings).sort().map(k => k + ':' + kota.fillings[k]).join(',');
+    addLine({ key, kota });
+    bootstrap.Modal.getInstance(kotaModalEl).hide();
+  });
+  // "Build a kota" links from the home page open the builder straight away.
+  if (hash === 'kota') bootstrap.Modal.getOrCreateInstance(kotaModalEl).show();
+
+  // ---------- Checkout ----------
+  const form = document.getElementById('checkoutForm');
+  const errorEl = document.getElementById('checkoutError');
+  const checkoutBtn = document.getElementById('checkoutBtn');
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    errorEl.classList.add('d-none');
+    if (!form.checkValidity()) {
+      form.classList.add('was-validated');
+      return;
+    }
+    checkoutBtn.disabled = true;
+    checkoutBtn.textContent = 'Placing order…';
+    try {
+      const order = await sendJSON('/api/orders', 'POST', {
+        customer_name: form.customer_name.value,
+        customer_phone: form.customer_phone.value,
+        notes: form.notes.value,
+        items: cart.map(l => l.kota ? { kota: l.kota, quantity: l.quantity } : { id: l.id, quantity: l.quantity }),
+      });
+      cart = [];
+      saveCart();
+      renderCart();
+      form.reset();
+      form.classList.remove('was-validated');
+      bootstrap.Offcanvas.getInstance(document.getElementById('cartPanel'))?.hide();
+      document.getElementById('orderCode').textContent = order.code;
+      document.getElementById('orderTotal').textContent = money(order.total);
+      document.getElementById('trackLink').href = '/chat?order=' + encodeURIComponent(order.code);
+      new bootstrap.Modal(document.getElementById('orderModal')).show();
+    } catch (err) {
+      errorEl.textContent = err.message;
+      errorEl.classList.remove('d-none');
+    } finally {
+      checkoutBtn.disabled = false;
+      checkoutBtn.textContent = 'Place order for collection';
+    }
+  });
+
+  renderCart();
+</script>
+{% endblock %}
