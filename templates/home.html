@@ -1,141 +1,139 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Las Vegas Restaurant</title>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    /* Custom Styles */
-    .navbar {
-      background: #fff;
-      box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
-    }
-    .hero {
-      background: url('https://images.unsplash.com/photo-1600891963937-cd39cf7ca1b9?auto=format&fit=crop&w=1400&q=80') no-repeat center center/cover;
-      color: white;
-      text-align: center;
-      padding: 120px 20px;
-      position: relative;
-    }
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-    }
-    .hero .content {
-      position: relative;
-      z-index: 1;
-    }
-    .feature-card {
-      border: none;
-      border-radius: 15px;
-      box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
-      transition: all 0.3s ease;
-    }
-    .feature-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0px 6px 15px rgba(0,0,0,0.15);
-    }
-    footer {
-      background: #222;
-      color: #eee;
-      padding: 40px 20px;
-    }
-    footer h5 {
-      color: #FFD700;
-    }
-    footer a {
-      text-decoration: none;
-      color: #ddd;
-    }
-    footer a:hover {
-      color: #FFD700;
-    }
-  </style>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}{{ store.name }} — {{ store.tagline }}{% endblock %}
 
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg sticky-top">
-    <div class="container">
-      <a class="navbar-brand fw-bold text-dark" href="#">🍔 LAS VEGAS</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse justify-content-end" id="navMenu">
-        <ul class="navbar-nav">
-          <li class="nav-item"><a class="btn btn-warning m-1" href="/menu">Menu</a></li>
-          <li class="nav-item"><a class="btn btn-warning m-1" href="/reservation">Book Table</a></li>
-          <li class="nav-item"><a class="btn btn-warning m-1" href="/admin">Admin Dashboard</a></li>
-          
-        </ul>
+{% macro cat_link(cat) %}{{ url_for('menu') }}#{{ cat.name|lower|replace(' ', '-') }}{% endmacro %}
+
+{% block content %}
+<section class="hero">
+  <div class="container py-5">
+    <div class="row align-items-center g-5 py-lg-3">
+      <div class="col-lg-6">
+        <span class="tf-eyebrow mb-3">Ntuzuma · Open till {{ '%02d:00'|format(store.close_hour) }}</span>
+        <h1 class="mb-4">Good food.<br><span class="outline">Good</span> <span class="red">mood.</span></h1>
+        <p class="lead mb-4">Build-your-own kotas, fresh amagwinya, hotdogs and hot chips. Order ahead, skip the queue, collect it hot.</p>
+        <div class="d-flex flex-wrap gap-3">
+          <a href="{{ url_for('menu') }}" class="btn btn-tf btn-lg px-4">Order online <i class="bi bi-arrow-right ms-1"></i></a>
+          <a href="{{ url_for('menu') }}#kota" class="btn btn-tf-outline btn-lg px-4">Build a kota</a>
+        </div>
       </div>
-    </div>
-  </nav>
-
-  <!-- Hero -->
-  <section class="hero">
-    <div class="content">
-      <h1 class="display-4 fw-bold">Welcome to Las Vegas</h1>
-      <p class="lead">Delicious spice dishes, premium quality & fast service.</p>
-      <a href="/menu" class="btn btn-warning btn-lg m-2">Order Online</a>
-      <a href="/reservation" class="btn btn-outline-light btn-lg m-2">Book a Table</a>
-    </div>
-  </section>
-
-  <!-- Why Choose Us -->
-  <section class="py-5">
-    <div class="container">
-      <h2 class="text-center mb-4">Why Choose Las Vegas?</h2>
-      <div class="row g-4">
-        <div class="col-md-4">
-          <div class="card feature-card text-center p-4">
-            <h3>⏱ Fast Service</h3>
-            <p class="mt-2">Fresh, authentic spice dishes prepared quickly without compromising on flavor.</p>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card feature-card text-center p-4">
-            <h3>⭐ Premium Quality</h3>
-            <p class="mt-2">Only the finest spices and freshest ingredients sourced from trusted suppliers.</p>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card feature-card text-center p-4">
-            <h3>💬 24/7 Chat Support</h3>
-            <p class="mt-2">Our AI chatbot is always ready to help with orders, questions, and recommendations.</p>
-          </div>
+      <div class="col-lg-6">
+        <div class="hero-board">
+          <span class="sticker">From R1.50!</span>
+          <h2 class="board-title mb-3">On the board</h2>
+          <ul class="list-unstyled mb-0">
+            {% for cat in categories %}
+            <li>
+              <a class="menu-row" href="{{ cat_link(cat) }}">
+                <span class="fw-bold">{{ 'Create your own kota' if cat.name == 'Kota' else cat.name }}</span>
+                <span class="leader" aria-hidden="true"></span>
+                <span class="menu-row-price">from R{{ '%.2f'|format(cat.from_price) }}</span>
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- Footer -->
-  <footer>
-    <div class="container">
-      <div class="row">
-        <!-- Visit Us -->
-        <div class="col-md-6 mb-4">
-          <h5>Visit Us</h5>
-          <p>📍 Gumbani Village</p>
-          <p>📞 065369815</p>
-          <p>⏰ Open Daily: 11AM - 11PM</p>
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    {% for _ in range(2) %}
+      <span>Create your own kota</span>
+      {% for item in menu if item.desc == '' and item.category in ['Amagwinya', 'Hotdogs'] %}<span>{{ item.name }}</span>{% endfor %}
+      <span>Umkhuba</span>
+    {% endfor %}
+  </div>
+</div>
+
+<section class="py-5">
+  <div class="container py-lg-3">
+    <h2 class="section-title mb-4">What are you craving?</h2>
+    <div class="row g-3">
+      {% for cat in categories %}
+      <div class="col-6 col-md-4 col-lg-2">
+        <a href="{{ cat_link(cat) }}" class="tf-card cat-tile text-center px-2">
+          <i class="bi bi-{{ cat.icon }}"></i>{{ cat.name }}
+          <small>from R{{ '%.2f'|format(cat.from_price) }}</small>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="pb-5">
+  <div class="container">
+    <div class="tf-card kota-promo p-4 p-lg-5">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+          <span class="tf-eyebrow mb-3">House special</span>
+          <h2 class="section-title mb-3">Create your own kota</h2>
+          <p class="fs-5 mb-0">Pick your bread — white, brown, or 4 slices with fries — then pile on polony, cheese, sausage, cheese russian, yababa or chicken feet. Your kota, your way.</p>
         </div>
-        <!-- Quick Actions -->
-        <div class="col-md-6">
-          <h5>Quick Actions</h5>
-          <a href="/menu" class="btn btn-outline-light w-100 my-2">Browse Menu & Order</a>
-          <a href="/reservation" class="btn btn-outline-light w-100 my-2">Make Reservation</a>
-          <a href="/chat" class="btn btn-outline-light w-100 my-2">Chat with Us</a>
+        <div class="col-lg-5 text-lg-end">
+          <a href="{{ url_for('menu') }}#kota" class="btn btn-tf btn-lg px-5">Start building <i class="bi bi-arrow-right ms-1"></i></a>
         </div>
       </div>
     </div>
-  </footer>
+  </div>
+</section>
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<section class="py-5">
+  <div class="container">
+    <h2 class="section-title mb-4">How it works</h2>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="tf-card p-4 h-100">
+          <div class="step-num mb-2">01</div>
+          <h3 class="h5">Pick your food</h3>
+          <p class="text-tf-muted mb-0">Browse the menu, build a kota, and add what you like to your order.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="tf-card p-4 h-100">
+          <div class="step-num mb-2">02</div>
+          <h3 class="h5">Get your number</h3>
+          <p class="text-tf-muted mb-0">Check out with your name and phone. You'll get an order number like TF-12345.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="tf-card p-4 h-100">
+          <div class="step-num mb-2">03</div>
+          <h3 class="h5">Collect it hot</h3>
+          <p class="text-tf-muted mb-0">Track your order in our <a href="{{ url_for('chat') }}">help chat</a> and pay when you collect. Drinks are available in store.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pt-4">
+  <div class="container">
+    <div class="tf-card visit-card p-4 p-lg-5">
+      <div class="row g-4 align-items-center">
+        <div class="col-lg-6">
+          <span class="tf-eyebrow mb-3" style="background:var(--tf-yellow);color:var(--tf-ink)">Visit us</span>
+          <h2 class="section-title mb-3">Pull up a chair</h2>
+          <p class="mb-1"><i class="bi bi-geo-alt-fill me-2" style="color:var(--tf-yellow)"></i>{{ store.address }}</p>
+          <p class="mb-4"><i class="bi bi-telephone-fill me-2" style="color:var(--tf-yellow)"></i><a href="tel:{{ store.phone_link }}" class="text-white">{{ store.phone }}</a></p>
+          <div class="d-flex flex-wrap gap-3">
+            <a href="{{ url_for('reservation') }}" class="btn btn-tf-yellow px-4">Book a table</a>
+            <a href="tel:{{ store.phone_link }}" class="btn btn-tf-outline px-4">Call us</a>
+          </div>
+        </div>
+        <div class="col-lg-5 offset-lg-1">
+          <table class="table mb-0">
+            <tbody>
+              {% for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %}
+              <tr><td>{{ day }}</td><td class="text-end fw-bold">{{ '%02d:00'|format(store.open_hour) }} – {{ '%02d:00'|format(store.close_hour) }}</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
